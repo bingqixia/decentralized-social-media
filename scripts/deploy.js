@@ -1,33 +1,41 @@
-// We require the Hardhat Runtime Environment explicitly here. This is optional
-// but useful for running the script in a standalone fashion through `node <script>`.
-//
-// You can also run a script with `npx hardhat run <script>`. If you do that, Hardhat
-// will compile your contracts, add the Hardhat Runtime Environment's members to the
-// global scope, and execute the script.
-const hre = require("hardhat");
+/**
+ * Deploy the smart contract to the specified network
+ */
+const hre = require("hardhat")
 
-async function main() {
-  const currentTimestampInSeconds = Math.round(Date.now() / 1000);
-  const unlockTime = currentTimestampInSeconds + 60;
+const main = async () => {
+  const [owner] = await hre.ethers.getSigners()
+  const balance = await owner.getBalance()
+  const network = hre.network.name
 
-  const lockedAmount = hre.ethers.parseEther("0.001");
+  console.log("Selected network:", network)
+  console.log("Deploying contract with account:", owner.address)
+  console.log("Account balance:", hre.ethers.utils.formatEther(balance))
 
-  const lock = await hre.ethers.deployContract("Lock", [unlockTime], {
-    value: lockedAmount,
-  });
+  const contract = await hre.ethers.getContractFactory("DTwitter")
+  const txn = await contract.deploy(hre.ethers.utils.parseEther("0.001"))
 
-  await lock.waitForDeployment();
-
-  console.log(
-    `Lock with ${ethers.formatEther(
-      lockedAmount
-    )}ETH and unlock timestamp ${unlockTime} deployed to ${lock.target}`
-  );
+  await txn.deployed()
+  console.log("\nDTwitter contract deployed to :", txn.address)
 }
 
-// We recommend this pattern to be able to use async/await everywhere
-// and properly handle errors.
-main().catch((error) => {
-  console.error(error);
-  process.exitCode = 1;
-});
+/**
+ * Sleep the main thread for the specified number of milliseconds
+ * @param {number} ms
+ */
+const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
+
+/**
+ * Execute the main script
+ */
+const runMain = async () => {
+  try {
+    await main()
+    process.exit(0)
+  } catch (error) {
+    console.error(error)
+    process.exit(1)
+  }
+}
+
+runMain()
