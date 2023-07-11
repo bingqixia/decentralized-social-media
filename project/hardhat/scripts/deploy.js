@@ -14,7 +14,7 @@ const main = async () => {
 
   const contract = await hre.ethers.getContractFactory("DTwitter")
   const txn = await contract.deploy(
-    hre.ethers.utils.parseEther("0.001")
+    hre.ethers.utils.parseEther("0")
   )
 
   await txn.deployed()

@@ -120,7 +120,7 @@ contract DTwitter is Ownable, Pausable {
         string memory _message,
         uint256 _replyID,
         uint256 _retweetID
-    ) public payable whenNotPaused {
+    ) public onlyOwner payable whenNotPaused {
         if (msg.value < price) revert InvalidPrice();
         if (bytes(_message).length > 280) revert InvalidMessage();
         if (lastTweetedAt[msg.sender] + 1 minutes >= block.timestamp)
@@ -158,6 +158,7 @@ contract DTwitter is Ownable, Pausable {
      */
     function editTweet(uint256 _id, string memory _message)
         public
+        onlyOwner
         whenNotPaused
     {
         if (tweets[_id].timestamp == 0) revert InvalidID();
@@ -181,7 +182,7 @@ contract DTwitter is Ownable, Pausable {
      * @notice Delete a tweet from the contract
      * @param _id The ID of the tweet to delete
      */
-    function deleteTweet(uint256 _id) public whenNotPaused {
+    function deleteTweet(uint256 _id) public onlyOwner whenNotPaused {
         if (tweets[_id].timestamp == 0) revert InvalidID();
         if (tweets[_id].deleted) revert DeletedTweet();
         if (tweets[_id].from != msg.sender) revert Unauthorized();
