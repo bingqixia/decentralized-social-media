@@ -173,15 +173,70 @@ export default function Tweet(props: TweetProps) {
    * On page load, get the relevant tweet or retweet
    */
   useEffect(() => {
-    console.log(" 111page load ", "tweets ", tweets, "props.id ", props.id);
-    if (tweets && props.id && tweets.get(props.id)!.retweetID.isZero()) {
+    // console.log(" 111page load ", "tweets ", tweets, "props.id ", props.id);
+    // if (tweets && props.id && tweets.get(props.id)!.retweetID.isZero()) {
+    //   console.log(" page load ", "tweets ", tweets, "props.id ", props.id);
+    //   setTweet(tweets.get(props.id))
+    // } else if (tweets && props.id) {
+    //   console.log(" page load1 ", "tweets ", tweets, "props.id ", props.id);
+    //   const retweetID = tweets.get(props.id)!.retweetID
+    //   setTweet(tweets.get(retweetID.toNumber()))
+    //   setRetweet(tweets.get(props.id))
+    // }
+
+    if (tweets && props.id) {
       console.log(" page load ", "tweets ", tweets, "props.id ", props.id);
-      setTweet(tweets.get(props.id))
-    } else if (tweets && props.id) {
-      console.log(" page load1 ", "tweets ", tweets, "props.id ", props.id);
-      const retweetID = tweets.get(props.id)!.retweetID
-      setTweet(tweets.get(retweetID.toNumber()))
-      setRetweet(tweets.get(props.id))
+      
+      let userTweet = tweets.get(props.id)!;
+      // retrieve message from IPFS
+      const fileName = process.env.NEXT_PUBLIC_STORAGE_FILE;
+      const cid = userTweet.message;
+      const url = `https://dweb.link/ipfs/${cid}/${fileName}`;
+
+      fetch(url)
+        .then((response) => {
+          if(response.ok) {
+            return response.text();
+          } else {
+            return "not find"
+          }
+        } )
+        .then((text) => {
+          if (text != "not find") {
+            userTweet.message = text;
+            console.log(cid, " fetched ipfs file: ", url, " message: ", userTweet.message);
+          }
+          setTweet(userTweet)
+        }).catch(function() {
+            console.log("error");
+        });
+
+        if(!userTweet.retweetID.isZero()) {
+          const retweetID = userTweet.retweetID.toNumber();
+          let reTweet = tweets.get(retweetID)!;
+          
+          const cidReply = reTweet.message;
+          const rePlyUrl = `https://dweb.link/ipfs/${cidReply}/${fileName}`;
+
+          fetch(rePlyUrl)
+            .then((response) => {
+                if(response.ok) {
+                  return response.text();
+                } else {
+                  return "not find"
+                }
+            })
+            .then((text) => {
+              if (text != "not find") {
+                reTweet.message = text;
+                console.log(cid, " fetched ipfs file: ", url, " message: ", userTweet.message);
+              }
+              setTweet(reTweet)
+            }).catch(function() {
+                console.log("error");
+            });
+            setRetweet(userTweet);
+        }
     }
   }, [tweets, props.id])
 

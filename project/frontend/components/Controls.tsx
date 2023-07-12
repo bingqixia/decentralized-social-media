@@ -185,18 +185,18 @@ export default function Controls() {
   /**
    * Pause all transactions to the contract, only for the owner
    */
-  const pauseContract = () => {
-    try {
-      if (isPausedData) {
-        unpause()
-      } else {
-        pause()
-      }
-    } catch (error) {
-      toast.error("Transaction error")
-      console.error("Transaction error --", error)
-    }
-  }
+  // const pauseContract = () => {
+  //   try {
+  //     if (isPausedData) {
+  //       unpause()
+  //     } else {
+  //       pause()
+  //     }
+  //   } catch (error) {
+  //     toast.error("Transaction error")
+  //     console.error("Transaction error --", error)
+  //   }
+  // }
 
   return (
     <section className="m-3 rounded-xl bg-gray-100 p-3">
@@ -221,13 +221,13 @@ export default function Controls() {
         </div>
         <div className="mt-6 flex flex-col">
           <button className="button mx-6">Submit Changes</button>
-          <button
+          {/* <button
             className="button mx-6 mt-3"
             type="button"
             onClick={pauseContract}
           >
             Pause Contract
-          </button>
+          </button> */}
           <button
             className="button mx-6 mt-3"
             type="button"

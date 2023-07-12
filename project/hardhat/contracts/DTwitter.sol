@@ -129,7 +129,7 @@ contract DTwitter is Ownable, Pausable {
     ) public onlyOwner payable whenNotPaused {
         if (msg.value < price) revert InvalidPrice();
         if (bytes(_message).length > 280) revert InvalidMessage();
-        if (lastTweetedAt[msg.sender] + 1 minutes >= block.timestamp)
+        if (lastTweetedAt[msg.sender] + 10 seconds >= block.timestamp)
             revert SenderCooldown();
 
         // console.log("%s has tweeted!", msg.sender); // DEBUG

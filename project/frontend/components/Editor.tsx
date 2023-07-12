@@ -100,11 +100,11 @@ export default function Editor() {
     // upload message to IPFS
     console.log("in sendTweet");
     const web3Client = new Web3Storage({
-      token: process.env.NEXT_PUBLIC_WEB3STORAGE_TOKEN,
+      token: process.env.NEXT_PUBLIC_WEB3STORAGE_TOKEN ?? '',
     });
 
     try {
-      const fileName = process.env.NEXT_PUBLIC_STORAGE_FILE;
+      const fileName = process.env.NEXT_PUBLIC_STORAGE_FILE ?? '';
       const buffer = Buffer.from(message.toString());
       const files = [new File([buffer], fileName)];
       

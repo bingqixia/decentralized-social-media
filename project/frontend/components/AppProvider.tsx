@@ -41,32 +41,48 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
             "getTweets",
             data
           )
-    
+
           setTweets((prevState: Map<number, TweetType> | undefined) => {
             let newState = new Map(prevState)
             data.forEach((tweet, id) => {
-              // retrieve message from IPFS
-            const fileName = process.env.NEXT_PUBLIC_STORAGE_FILE;
-            const cid = tweet[2];
-            const url = `https://dweb.link/ipfs/${cid}/${fileName}`;
-            fetch(url)
-              .then((response) => response.text())
-              .then((text) => {
-                  console.log("fetched ipfs file: ", url, " message: ", text);
-                  newState.set(id + 1, {
-                    id: id + 1,
-                    from: tweet[0],
-                    timestamp: new Date(tweet[1] * 1000),
-                    message: text,
-                    deleted: tweet[3],
-                    replyID: tweet[4],
-                    retweetID: tweet[5],
-                  })
-              }).catch(function() {
-                  console.log("error");
-              });
+              newState.set(id + 1, {
+                id: id + 1,
+                from: tweet[0],
+                timestamp: new Date(tweet[1] * 1000),
+                message: tweet[2],
+                deleted: tweet[3],
+                replyID: tweet[4],
+                retweetID: tweet[5],
+              })
             })
             return newState
+            
+          // setTweets((prevState: Map<number, TweetType> | undefined) => {
+          //   let newState = new Map(prevState)
+          //   console.log(newState)
+          //   data.forEach((tweet, id) => {
+          //     // retrieve message from IPFS
+          //   const fileName = process.env.NEXT_PUBLIC_STORAGE_FILE;
+          //   const cid = tweet[2];
+          //   const url = `https://dweb.link/ipfs/${cid}/${fileName}`;
+          //   fetch(url)
+          //     .then((response) => response.text())
+          //     .then((text) => {
+          //         console.log("fetched ipfs file: ", url, " message: ", text);
+          //         newState.set(id + 1, {
+          //           id: id + 1,
+          //           from: tweet[0],
+          //           timestamp: new Date(tweet[1] * 1000),
+          //           message: text,
+          //           deleted: tweet[3],
+          //           replyID: tweet[4],
+          //           retweetID: tweet[5],
+          //         })
+          //     }).catch(function() {
+          //         console.log("error");
+          //     });
+          //   })
+          //   return newState
           })
         }
       },
