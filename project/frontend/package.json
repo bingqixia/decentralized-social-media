@@ -27,7 +27,8 @@
     "react-transition-group": "^4.4.2",
     "seedrandom": "^3.0.5",
     "wagmi": "^0.4.8",
-    "web-vitals": "^3.3.2"
+    "web-vitals": "^3.3.2",
+    "web3.storage": "^4.5.4"
   },
   "devDependencies": {
     "@types/node": "^18.7.18",

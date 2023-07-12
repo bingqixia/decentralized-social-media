@@ -1,4 +1,5 @@
 import { ConnectButton } from "@rainbow-me/rainbowkit"
+import Controls from "./Controls"
 
 export default function Sidebar(props: { isOwner: boolean }) {
   return (
@@ -6,6 +7,7 @@ export default function Sidebar(props: { isOwner: boolean }) {
       <div className="mt-3 self-center">
         <ConnectButton chainStatus="none" showBalance={true} />
       </div>
+      <Controls />
     </aside>
   )
 }

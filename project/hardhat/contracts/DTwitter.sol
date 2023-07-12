@@ -81,6 +81,12 @@ contract DTwitter is Ownable, Pausable {
         uint256 retweetID
     );
 
+    /**
+     * @notice Emitted when the contract owner clears all tweets from the contract
+     * @param id The ID number of the last valid tweet
+     */
+    event ClearTweets(uint256 id);
+
     /// @notice Thrown when the given tweet ID does not exist
     error InvalidID();
 
@@ -197,6 +203,18 @@ contract DTwitter is Ownable, Pausable {
             tweets[_id].replyID,
             tweets[_id].retweetID
         );
+    }
+
+    /// @notice In case of emergency, the owner can clear all tweets from the contract
+    function clear() public onlyOwner {
+        uint256 lastID = id;
+        for (uint256 i = 0; i < tweetIDs.length; i++) {
+            delete tweets[i];
+        }
+        delete tweetIDs;
+        id = 1;
+
+        emit ClearTweets(lastID);
     }
 
     /**

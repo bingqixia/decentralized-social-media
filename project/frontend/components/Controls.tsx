@@ -29,46 +29,12 @@ export default function Controls() {
     }
   )
 
-  useContractRead(
-    {
-      addressOrName: contractAddress,
-      contractInterface: contractABI,
-    },
-    "getOdds",
-    {
-      onSuccess(data) {
-        setOdds(ethers.utils.formatUnits(data, 0))
-      },
-    }
-  )
-
-  useContractRead(
-    {
-      addressOrName: contractAddress,
-      contractInterface: contractABI,
-    },
-    "getJackpot",
-    {
-      onSuccess(data) {
-        setJackpot(ethers.utils.formatEther(data))
-      },
-    }
-  )
-
   const { refetch: totalTweetsRefetch } = useContractRead(
     {
       addressOrName: contractAddress,
       contractInterface: contractABI,
     },
     "getTotalTweets"
-  )
-
-  const { data: isPausedData } = useContractRead(
-    {
-      addressOrName: contractAddress,
-      contractInterface: contractABI,
-    },
-    "isPaused"
   )
 
   const { write: updateSettings } = useContractWrite(
@@ -239,19 +205,6 @@ export default function Controls() {
         Welcome, owner! You may modify the contract settings below:
       </p>
       <form onSubmit={updateContractSettings}>
-        <div className="mt-3 flex">
-          <label>Odds:</label>
-          <input
-            id="odds"
-            type="number"
-            value={odds}
-            onChange={(e) => setOdds(e.target.value)}
-            placeholder="0 - 100"
-            className="w-full bg-gray-100 text-right"
-            required
-          />
-          <span>%</span>
-        </div>
         <div className="mt-1 flex">
           <label>Price:</label>
           <input
@@ -261,20 +214,6 @@ export default function Controls() {
             value={price}
             onChange={(e) => setPrice(e.target.value)}
             placeholder="Price in Ether"
-            className="w-full bg-gray-100 text-right"
-            required
-          />
-          <span>Ξ</span>
-        </div>
-        <div className="mt-1 flex">
-          <label>Jackpot:</label>
-          <input
-            id="jackpot"
-            type="number"
-            step="any"
-            value={jackpot}
-            onChange={(e) => setJackpot(e.target.value)}
-            placeholder="Prize in Ether"
             className="w-full bg-gray-100 text-right"
             required
           />

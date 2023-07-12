@@ -1,6 +1,8 @@
 import { ethers } from "ethers"
 import { useState } from "react"
 import toast from "react-hot-toast"
+import { Web3Storage } from "web3.storage"
+
 import {
   useContractRead,
   useContractWrite,
@@ -73,16 +75,39 @@ export default function TweetModal(props: ModalProps) {
   /**
    * Submit a new tweet to the contract
    */
-  const sendTweet = () => {
+  const sendTweet = async () => {
+    // upload message to IPFS
+    console.log("in sendTweet");
+    const web3Client = new Web3Storage({
+      token: process.env.NEXT_PUBLIC_WEB3STORAGE_TOKEN,
+    });
+
+    const body = {
+      message: message.toString(),
+      sender: props.address
+    };
+
     try {
+      const fileName = process.env.NEXT_PUBLIC_STORAGE_FILE;
+      const buffer = Buffer.from(message.toString());
+      const files = [new File([buffer], fileName)];
+      
+      console.log("sed sendTweet");
+      const cid = await web3Client.put(files);
+      
+      const url = `https://dweb.link/ipfs/${cid}/${fileName}`;
+      console.log(url);
+
       newTweet({
-        args: [message.toString(), 0, 0],
+        args: [cid, 0, 0],
         overrides: { value: ethers.utils.parseEther(price) },
       })
       props.setModal(false)
+      setMessage("");
+
     } catch (error) {
-      toast.error("Transaction failed")
-      console.error("Transaction failed --", error)
+      toast.error("Oops! Something went wrong")
+      console.error("sendTweet failed --", error)
     }
   }
 
@@ -142,7 +167,7 @@ export default function TweetModal(props: ModalProps) {
                 {message ? message.length + "/280" : ""}
               </span>
               <button className="button m-3 self-end" onClick={sendTweet}>
-                Tweet
+                Tweet233
               </button>
             </div>
           </div>

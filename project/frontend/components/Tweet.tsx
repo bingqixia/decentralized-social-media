@@ -173,9 +173,12 @@ export default function Tweet(props: TweetProps) {
    * On page load, get the relevant tweet or retweet
    */
   useEffect(() => {
+    console.log(" 111page load ", "tweets ", tweets, "props.id ", props.id);
     if (tweets && props.id && tweets.get(props.id)!.retweetID.isZero()) {
+      console.log(" page load ", "tweets ", tweets, "props.id ", props.id);
       setTweet(tweets.get(props.id))
     } else if (tweets && props.id) {
+      console.log(" page load1 ", "tweets ", tweets, "props.id ", props.id);
       const retweetID = tweets.get(props.id)!.retweetID
       setTweet(tweets.get(retweetID.toNumber()))
       setRetweet(tweets.get(props.id))
@@ -236,6 +239,99 @@ export default function Tweet(props: TweetProps) {
               - {dayjs(tweet.timestamp).fromNow()}
             </span>
             <div>{tweet.message}</div>
+            <div className="mt-1 mr-12 flex justify-between">
+              {/* <button
+                className="rounded-full p-2 transition duration-200 hover:bg-gray-200"
+                onClick={() => {
+                  setMessage(""), setReplyModal(true)
+                }}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  strokeWidth="2"
+                  stroke="currentColor"
+                  fill="none"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="text-gray-500"
+                >
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                  <path d="M3 20l1.3 -3.9a9 8 0 1 1 3.4 2.9l-4.7 1"></path>
+                </svg>
+              </button> */}
+              <button
+                className="rounded-full p-2 transition duration-200 hover:bg-gray-200"
+                onClick={() => sendRetweet(props.id)}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  strokeWidth="2"
+                  stroke="currentColor"
+                  fill="none"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="text-gray-500"
+                >
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                  <path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -4v4h4"></path>
+                  <path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4"></path>
+                </svg>
+              </button>
+              <button
+                className="rounded-full p-2 transition duration-200 hover:bg-gray-200"
+                onClick={() => {
+                  setMessage(tweet.message), setEditModal(true)
+                }}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  strokeWidth="2"
+                  stroke="currentColor"
+                  fill="none"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="text-gray-500"
+                >
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                  <path d="M4 20h4l10.5 -10.5a1.5 1.5 0 0 0 -4 -4l-10.5 10.5v4"></path>
+                  <line x1="13.5" y1="6.5" x2="17.5" y2="10.5"></line>
+                </svg>
+              </button>
+              <button
+                className="rounded-full p-2 transition duration-200 hover:bg-gray-200"
+                onClick={() => removeTweet(props.id)}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  strokeWidth="2"
+                  stroke="currentColor"
+                  fill="none"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="text-gray-500"
+                >
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                  <line x1="4" y1="7" x2="20" y2="7"></line>
+                  <line x1="10" y1="11" x2="10" y2="17"></line>
+                  <line x1="14" y1="11" x2="14" y2="17"></line>
+                  <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"></path>
+                  <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"></path>
+                </svg>
+              </button>
+            </div>
+
           </div>
         </div>
       )}

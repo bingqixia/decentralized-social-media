@@ -1,7 +1,5 @@
-import { ethers } from "ethers"
 import React, { createContext, useContext, useState } from "react"
 import Confetti from "react-confetti"
-import toast from "react-hot-toast"
 import { useAccount, useContractEvent, useContractRead } from "wagmi"
 import { contractABI, contractAddress } from "../lib/contract"
 import { Tweet as TweetType } from "../lib/types"
@@ -25,6 +23,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     },
   })
 
+
   /**
    * Contract hooks
    */
@@ -37,18 +36,35 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     {
       onSuccess(data) {
         if (data) {
+
+          console.log(
+            "getTweets",
+            data
+          )
+    
           setTweets((prevState: Map<number, TweetType> | undefined) => {
             let newState = new Map(prevState)
             data.forEach((tweet, id) => {
-              newState.set(id + 1, {
-                id: id + 1,
-                from: tweet[0],
-                timestamp: new Date(tweet[1] * 1000),
-                message: tweet[2],
-                deleted: tweet[3],
-                replyID: tweet[4],
-                retweetID: tweet[5],
-              })
+              // retrieve message from IPFS
+            const fileName = process.env.NEXT_PUBLIC_STORAGE_FILE;
+            const cid = tweet[2];
+            const url = `https://dweb.link/ipfs/${cid}/${fileName}`;
+            fetch(url)
+              .then((response) => response.text())
+              .then((text) => {
+                  console.log("fetched ipfs file: ", url, " message: ", text);
+                  newState.set(id + 1, {
+                    id: id + 1,
+                    from: tweet[0],
+                    timestamp: new Date(tweet[1] * 1000),
+                    message: text,
+                    deleted: tweet[3],
+                    replyID: tweet[4],
+                    retweetID: tweet[5],
+                  })
+              }).catch(function() {
+                  console.log("error");
+              });
             })
             return newState
           })
@@ -64,7 +80,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     },
     "NewTweet",
     ([id, from, timestamp, message, deleted, replyID, retweetID]) => {
-      console.debug(
+      console.log(
         "NewTweet",
         id.toNumber(),
         from,
@@ -75,19 +91,30 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
         retweetID
       )
 
-      setTweets((prevState) => {
-        let newState = new Map(prevState)
-        newState.set(id.toNumber(), {
-          id: id.toNumber(),
-          from: from,
-          timestamp: new Date(timestamp * 1000),
-          message: message,
-          deleted: deleted,
-          replyID: replyID,
-          retweetID: retweetID,
-        })
-        return newState
-      })
+      // retrieve message from IPFS
+      const fileName = process.env.NEXT_PUBLIC_STORAGE_FILE;
+      const cid = message;
+      const url = `https://dweb.link/ipfs/${cid}/${fileName}`;
+      fetch(url)
+        .then((response) => response.text())
+        .then((text) => {
+            console.log(text);
+            setTweets((prevState) => {
+              let newState = new Map(prevState)
+              newState.set(id.toNumber(), {
+                id: id.toNumber(),
+                from: from,
+                timestamp: new Date(timestamp * 1000),
+                message: text,
+                deleted: deleted,
+                replyID: replyID,
+                retweetID: retweetID,
+              })
+              return newState
+            })
+        }).catch(function() {
+            console.log("error");
+        });
     },
     {
       once: false,
@@ -101,7 +128,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     },
     "EditTweet",
     ([id, from, timestamp, message, deleted, replyID, retweetID]) => {
-      console.debug(
+      console.log(
         "EditTweet",
         id.toNumber(),
         from,
@@ -112,19 +139,32 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
         retweetID
       )
 
-      setTweets((prevState) => {
-        let newState = new Map(prevState)
-        newState.set(id.toNumber(), {
-          id: id.toNumber(),
-          from: from,
-          timestamp: new Date(timestamp * 1000),
-          message: message,
-          deleted: deleted,
-          replyID: replyID,
-          retweetID: retweetID,
-        })
-        return newState
-      })
+      // retrieve message from IPFS
+      const fileName = process.env.NEXT_PUBLIC_STORAGE_FILE;
+      const cid = message;
+      const url = `https://dweb.link/ipfs/${cid}/${fileName}`;
+      fetch(url)
+        .then((response) => response.text())
+        .then((text) => {
+            console.log(text);
+            setTweets((prevState) => {
+              let newState = new Map(prevState)
+              newState.set(id.toNumber(), {
+                id: id.toNumber(),
+                from: from,
+                timestamp: new Date(timestamp * 1000),
+                message: message,
+                deleted: deleted,
+                replyID: replyID,
+                retweetID: retweetID,
+              })
+              return newState
+            })
+        }).catch(function() {
+            console.log("error");
+        });
+
+      
     },
     {
       once: false,
@@ -138,7 +178,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     },
     "DeleteTweet",
     ([id, from, timestamp, message, deleted, replyID, retweetID]) => {
-      console.debug(
+      console.log(
         "DeleteTweet",
         id.toNumber(),
         from,

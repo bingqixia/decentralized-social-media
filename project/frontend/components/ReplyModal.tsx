@@ -172,7 +172,7 @@ export default function ReplyTweet(props: ReplyProps) {
                 className="button m-3 self-end"
                 onClick={() => sendReply(props.id)}
               >
-                Tw33t
+                Send
               </button>
             </div>
           </div>
