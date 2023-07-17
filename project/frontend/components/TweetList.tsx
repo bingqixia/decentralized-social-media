@@ -10,9 +10,9 @@ export default function TweetList(props: { author?: string }) {
    * @returns {Array}
    */
   const getAuthorTweets = (): TweetType[] => {
-    console.log("getAuthorTweets")
+    // console.log("getAuthorTweets")
     if (tweets) {
-      console.log(tweets)
+      // console.log(tweets)
       let filtered = [...tweets.values()].filter(
         (tweet) => tweet.replyID.eq(0) && !tweet.deleted
       )
@@ -20,7 +20,7 @@ export default function TweetList(props: { author?: string }) {
         console.log(props.author)
         filtered = filtered.filter((tweet) => tweet.from == props.author)
       }
-      console.log(filtered)
+      // console.log(filtered)
       return filtered
     }
     return []
