@@ -1,52 +1,47 @@
 {
+  "name": "client",
+  "version": "0.1.0",
   "private": true,
-  "license": "MIT",
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint",
-    "format": "prettier --write .",
-    "prepare": "cd .. && husky install react/.husky"
-  },
   "dependencies": {
-    "@headlessui/react": "^1.6.3",
-    "@rainbow-me/rainbowkit": "^0.2.3",
-    "@web3uikit/core": "^1.1.5",
-    "@web3uikit/icons": "^1.1.2",
-    "@web3uikit/web3": "^0.3.2",
-    "dayjs": "^1.11.2",
-    "dotenv": "^16.0.0",
-    "ethers": "^5.6.8",
-    "next": "^12.1.5",
-    "next-themes": "^0.2.0",
-    "react": "^17.0.2",
-    "react-confetti": "^6.1.0",
-    "react-dom": "^17.0.2",
-    "react-hot-toast": "^2.2.0",
-    "react-transition-group": "^4.4.2",
-    "seedrandom": "^3.0.5",
-    "wagmi": "^0.4.8",
-    "web-vitals": "^3.3.2",
-    "web3.storage": "^4.5.4"
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^13.5.0",
+    "@web3uikit/core": "^0.1.10",
+    "@web3uikit/icons": "^0.1.5",
+    "buffer": "^6.0.3",
+    "cartoon-avatar": "^1.0.2",
+    "dotenv": "^16.0.2",
+    "ethers": "^5.7.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.4.1",
+    "react-scripts": "5.0.1",
+    "web-vitals": "^2.1.4",
+    "web3.storage": "^4.4.0",
+    "web3modal": "^1.9.9"
   },
-  "devDependencies": {
-    "@types/node": "^18.7.18",
-    "@types/react": "^18.0.20",
-    "autoprefixer": "^10.4.5",
-    "eslint": "^8.14.0",
-    "eslint-config-next": "^12.1.5",
-    "eslint-config-prettier": "^8.5.0",
-    "husky": "^8.0.1",
-    "lint-staged": ">=10",
-    "postcss": "^8.4.13",
-    "prettier": "^2.6.2",
-    "prettier-plugin-tailwindcss": "^0.1.11",
-    "tailwindcss": "^3.0.24",
-    "typescript": "^4.8.3"
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
   },
-  "lint-staged": {
-    "*.{ts,tsx,css,md}": "prettier --write",
-    "*.{ts,tsx}": "eslint --cache --fix"
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }
