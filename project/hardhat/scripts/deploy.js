@@ -9,13 +9,14 @@ const main = async () => {
   const network = hre.network.name
 
   console.log("Selected network:", network)
-  console.log("Deploying contract with account:", owner.address)
+  console.log("Deploying Account Manager contract with account:", owner.address)
   console.log("Account balance:", hre.ethers.utils.formatEther(balance))
 
-  const contract = await hre.ethers.getContractFactory("DTwitter")
-  const txn = await contract.deploy(
-    hre.ethers.utils.parseEther("0")
-  )
+  const contract = await hre.ethers.getContractFactory("AccountManager")
+  // const txn = await contract.deploy(
+  //   hre.ethers.utils.parseEther("0")
+  // )
+  const txn = await contract.deploy()
 
   await txn.deployed()
   console.log("\nContract address:", txn.address)
