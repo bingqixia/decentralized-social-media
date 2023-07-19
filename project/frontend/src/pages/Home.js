@@ -123,7 +123,7 @@ const Home = () =>{
                      <div className="tweet" onClick={addTweet}>{uploading ? <Loading /> : 'Tweet'}</div>
                  </div>
              </div>
-            <TweetInFeed profile ={false} reload={uploading}/>
+            <TweetInFeed profile ={false} reload={uploading} />
          </div>
         </>
     );

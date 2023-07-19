@@ -21,6 +21,7 @@ function App() {
   const notification = useNotification();
   const [loading, setLoadingState] = useState(false);
   const GoerliChainId = 5;
+  const [friends, setFriends] = useState([]);
 
   const alertNotification = (title, message, type) => {
     console.log("alertNotification");
@@ -167,6 +168,8 @@ function App() {
         signer
       );
       let dtwitterAddress = ethers.constants.AddressZero;
+
+
       try {
         dtwitterAddress = await accountManagerContract.Retrieve(signerAddress);
         console.log("retrieve: ", dtwitterAddress);
@@ -263,7 +266,7 @@ function App() {
     <>
       {isAuthenticated ? (
         <div className="page">
-          <div className="column sideBar">
+        <div className="column sideBar">
             <Sidebar />
           </div>
           <div className="column mainWindow">

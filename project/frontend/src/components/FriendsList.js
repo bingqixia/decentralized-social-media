@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import "./FriendsList.css";
 import { Avatar, Loading, useNotification } from "@web3uikit/core";
 import { Input } from "@web3uikit/core";
@@ -12,6 +12,7 @@ import UserContractAbi from "../abi/UserContract.json";
 const FriendsList = () => {
   const notification = useNotification();
   const [friends, setFriends] = useState([]);
+//   const { friends, setFriends } = useContext(FriendsContext)
   const [isLoading, setIsLoading] = useState(true);
   const [adding, setIsAdding] = useState(false);
   const [newFriendAddress, setNewFriendAddress] = useState(
@@ -21,6 +22,10 @@ const FriendsList = () => {
   const TwitterContractAddress = JSON.parse(
     localStorage.getItem("userContractAddress")
   );
+
+  const handleReloadPage = () => {
+    window.location.reload();
+  };
 
   useEffect(() => {
     loadFriendsList();
@@ -100,7 +105,8 @@ const FriendsList = () => {
       });
       setIsAdding(false);
     }
-    loadFriendsList();
+    // loadFriendsList();
+    handleReloadPage();
   }
 
   async function loadFriendsList() {
@@ -151,8 +157,9 @@ const FriendsList = () => {
       position: "topR",
       icon: <Bin />,
     });
-
-    loadFriendsList();
+    handleReloadPage();
+    // loadFriendsList();
+    
   }
 
   if (isLoading)
@@ -190,7 +197,7 @@ const FriendsList = () => {
           <div>
             <h3>Friends List</h3>
           </div>
-          {friends && friends.length === 0 ? (
+          {!friends || friends.length === 0 ? (
             <h1 className="loading">No Following Friends</h1>
           ) : (
             friends.map((e) => {
