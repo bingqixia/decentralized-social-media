@@ -1,0 +1,82 @@
+.rightbarContent {
+    display: flex;
+    flex-direction: column;
+    padding: 25px;
+    width: 100%;
+  }
+  
+  .friends {
+    background-color: #222b34;
+    border-radius: 25px;
+    min-height: calc(100vh - 200px);
+    margin-top: 40px;
+    padding: 20px;
+    font-weight: bold;
+    font-size: 18px;
+    overflow: hidden;
+    color: aliceblue;
+    width: 90%;
+  }
+  
+  .friendslist {
+    display: flex; /* Add display flex to create a row layout */
+    flex-wrap: wrap; /* Allow items to wrap into a new line if there is not enough space */
+    gap: 10px; /* Add some gap between friend items */
+  }
+  
+  .friend-item {
+    display: flex; /* Add display flex to create a row layout for each friend item */
+    align-items: center; /* Align items vertically at the center */
+    background-color: #2a3c4e;
+    border-radius: 15px;
+    padding: 10px;
+    color: white;
+  }
+  
+
+  .friend-info {
+    flex: 1; /* Make the friend info take up the remaining space */
+    margin-left: 10px;
+    overflow: hidden; /* Hide any overflowing content */
+    white-space: nowrap; /* Prevent the content from wrapping to the next line */
+    text-overflow: ellipsis; /* Add an ellipsis (...) for long content */
+
+  }
+  
+  .interactionNums {
+    display: flex; /* Add display flex to align the delete icon properly */
+    align-items: center; /* Align items vertically at the center */
+    margin-left: auto; /* Push the delete icon to the right */
+  }
+  
+  .addfriends {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .addfriends Input {
+    margin-bottom: 10px; /* Add margin at the bottom of the input */
+  }
+  
+  .saveContainer {
+    width: 100%;
+    margin-top: 10px;
+  }
+  
+  .save {
+    background-color: #1DA1F2;
+    padding: 10px 20px;
+    border-radius: 1000px;
+    color: white;
+    font-weight: 600;
+    width: 90%;
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+  
+  .save:hover {
+    cursor: pointer;
+  }

@@ -4,7 +4,7 @@ import Home from "./pages/Home";
 import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
 import Sidebar from "./components/Sidebar";
-import Rightbar from "./components/Rightbar";
+import FriendsList from "./components/FriendsList";
 import "./App.css";
 import { Button, useNotification, Loading } from "@web3uikit/core";
 import { Twitter, Metamask } from "@web3uikit/icons";
@@ -98,7 +98,7 @@ function App() {
       console.log("contract deploying... ");
       const contract = await factory.deploy();
       await contract.deployed();
-      console.log("contract deployed !", contract.address);
+      // console.log("contract deployed !", contract.address);
       return contract.address;
     } catch (error) {
       console.log(
@@ -179,10 +179,6 @@ function App() {
         // this user hasn't registered
         // deploy user contract for this user
         const userContractAddress = await deployContract(signer);
-        console.log(
-          "deployed success???!! userContractAddress --> ",
-          userContractAddress
-        );
         
         // register to account manager
         if (userContractAddress !== ethers.constants.AddressZero) {
@@ -278,7 +274,7 @@ function App() {
             </Routes>
           </div>
           <div className="column rightBar">
-            <Rightbar />
+            <FriendsList />
           </div>
         </div>
       ) : (

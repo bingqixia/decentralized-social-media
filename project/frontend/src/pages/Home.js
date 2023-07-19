@@ -17,7 +17,6 @@ const Home = () =>{
     const [selectedImage,setSelectedImage] = useState();
     const [tweetText,setTweetText] = useState('');
     const userImage = JSON.parse(localStorage.getItem('userImage'));
-    console.log("userimage: ", userImage);
     const [selectedFile,setSelectedFile] = useState();
     const [uploading,setUploading]= useState(false);
     let imageIpfsUrl = '';

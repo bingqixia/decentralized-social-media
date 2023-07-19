@@ -4,10 +4,19 @@ pragma solidity ^0.8.20;
 contract UserContract{
     address public owner;
     uint256 private counter; // represent ID of a tweet
+    uint256 private friendCounter; // represent ID of a friend
 
     constructor(){
         owner = msg.sender;
         counter = 0;
+        friendCounter = 0;
+    }
+
+    struct Friend{
+        address walletAddress;
+        address contractAddress;
+        uint256 id;
+        bool isDeleted;
     }
 
     struct tweet{
@@ -28,6 +37,7 @@ contract UserContract{
 
     mapping(uint256 => tweet) Tweets; // id to tweet struct
     mapping(address => user) Users; // address to a user struct
+    mapping (uint256 => Friend) Friends; //id to friend struct
 
     event tweetCreated(
         address tweeter,
@@ -39,6 +49,18 @@ contract UserContract{
     );
 
     event TweetDeleted(
+        uint256 id,
+        bool isDeleted
+    );
+
+    event friendAdded(
+        address walletAddress,
+        address contractAddress,
+        uint256 id,
+        bool isDeleted
+    );
+
+    event friendDeleted(
         uint256 id,
         bool isDeleted
     );
@@ -131,4 +153,42 @@ contract UserContract{
         return Users[userAddress];
     }
 
+    // above is friends manager
+
+        // Method to add a Tweet
+
+    function addFriend(address walletAddress, address contractAddress) public {
+        Friend storage newFriend = Friends[friendCounter];
+        newFriend.walletAddress = walletAddress;
+        newFriend.contractAddress = contractAddress;
+        newFriend.id = friendCounter;
+        newFriend.isDeleted = false;
+        emit friendAdded(walletAddress, contractAddress, friendCounter, false);
+        friendCounter++;
+    }
+
+    // Method to delete a friend
+    function deleteFriend(uint256 friendId, bool isDeleted) external {
+        Friends[friendId].isDeleted = isDeleted;
+        emit friendDeleted(friendId, isDeleted);
+    }
+
+    // get all friends
+    function getAllFriends() public view returns (Friend[] memory){
+        Friend[] memory temporary = new Friend[](friendCounter);
+        uint countFriends = 0;
+
+        for(uint i=0; i<friendCounter; i++){
+            if(Friends[i].isDeleted == false){
+                temporary[countFriends] = Friends[i];
+                countFriends++;
+            }
+        }
+        Friend[] memory result = new Friend[](countFriends);
+        for(uint i=0; i<countFriends;i++){
+            result[i] = temporary[i];
+        }
+
+        return result;
+    }
 }

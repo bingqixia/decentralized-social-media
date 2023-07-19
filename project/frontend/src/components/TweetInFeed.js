@@ -116,7 +116,7 @@ const TweetInFeed = (props) => {
       })
     );
     setTweets(result.reverse());
-    console.log("loadMyTweets tweets", tweets);
+    console.log("loadAllTweets tweets", tweets);
     setIsLoading(false);
   }
 
