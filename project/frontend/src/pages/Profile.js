@@ -9,7 +9,7 @@ import { Eth } from "@web3uikit/icons";
 const Profile = () =>{
     const activeAccount = JSON.parse(localStorage.getItem('activeAccount'));
     const userName = JSON.parse(localStorage.getItem('userName'));
-    const userBio = JSON.parse(localStorage.getItem('userBio'));
+    const userDescription = JSON.parse(localStorage.getItem('userDescription'));
     const userImage = JSON.parse(localStorage.getItem('userImage'));
     const userBanner = JSON.parse(localStorage.getItem('userBanner'));
     const [accountBalance,setAccountBalance] = useState(0);
@@ -37,7 +37,7 @@ const Profile = () =>{
                <Link to='/settings'>
                    <div className="profileEdit">Edit Profile</div>
                </Link>
-               <div className="profileBio">{userBio}</div>
+               <div className="profileBio">{userDescription}</div>
                <div className="profileTabs">
                    <div className="profileTab">Your Tweets</div>
                </div>

@@ -5,8 +5,8 @@ import {Image, Twitter } from '@web3uikit/icons';
 import TweetInFeed from "../components/TweetInFeed";
 import { ethers } from "ethers";// web3 sotrage
 import Web3Modal from 'web3modal';
-import { TwitterContractAddress, Web3StorageApi, MessageFileName } from "../config";
-import TwitterAbi from '../abi/Twitter.json';
+import { Web3StorageApi, MessageFileName } from "../config";
+import TwitterAbi from '../abi/UserContract.json';
 import { Web3Storage } from 'web3.storage';
 import { Buffer } from "buffer";
 
@@ -17,22 +17,35 @@ const Home = () =>{
     const [selectedImage,setSelectedImage] = useState();
     const [tweetText,setTweetText] = useState('');
     const userImage = JSON.parse(localStorage.getItem('userImage'));
+    console.log("userimage: ", userImage);
     const [selectedFile,setSelectedFile] = useState();
     const [uploading,setUploading]= useState(false);
     let imageIpfsUrl = '';
     let textIpfsUrl = '';
     const notification = useNotification();
+    const TwitterContractAddress = JSON.parse(localStorage.getItem('userContractAddress'));
 
     async function storeFile () {
         try {
             const buffer = Buffer.from(tweetText);
-            const files = [new File([buffer], MessageFileName), selectedFile];
-            const client = new Web3Storage({token: Web3StorageApi});
-            const rootCid = await client.put(files);
-            imageIpfsUrl = `https://${rootCid}.ipfs.dweb.link/${selectedFile.name}`;  // storage end
-            textIpfsUrl = `https://${rootCid}.ipfs.dweb.link/${MessageFileName}`;  // storage end
-            console.log("storeFile => ", "imageUrl: ", imageIpfsUrl, ", messageUrl: ", textIpfsUrl)
+            let files = null;
+            if(selectedImage) {
+                files = [new File([buffer], MessageFileName), selectedFile];
+                const client = new Web3Storage({token: Web3StorageApi});
+                const rootCid = await client.put(files);
+                imageIpfsUrl = encodeURI(`https://${rootCid}.ipfs.dweb.link/${selectedFile.name}`);  // storage end
+                textIpfsUrl = encodeURI(`https://${rootCid}.ipfs.dweb.link/${MessageFileName}`);  // storage end
+                console.log("storeFile => ", "imageUrl: ", imageIpfsUrl, ", messageUrl: ", textIpfsUrl)
+            } else {
+                files = [new File([buffer], MessageFileName)];
+                const client = new Web3Storage({token: Web3StorageApi});
+                const rootCid = await client.put(files);
+                textIpfsUrl = encodeURI(`https://${rootCid}.ipfs.dweb.link/${MessageFileName}`);  // storage end
+                console.log("storeFile => ", "imageUrl: ", imageIpfsUrl, ", messageUrl: ", textIpfsUrl)
+            }
+           
         } catch (error) {
+            console.error(`upload tweet to ipfs failed! Error -> ${error}`);
             notification({
                 type: "error",
                 message: `Something went wrong. Please refresh and try again. Error ${error}`,
@@ -63,9 +76,7 @@ const Home = () =>{
             return;
         }
         setUploading(true);
-        if(selectedImage){
-            await storeFile();
-        }
+        await storeFile();
         const web3Modal = new Web3Modal();
         const connection = await web3Modal.connect();
         const provider = new ethers.providers.Web3Provider(connection);

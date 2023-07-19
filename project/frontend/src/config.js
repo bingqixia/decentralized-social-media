@@ -1,3 +1,4 @@
-export const TwitterContractAddress = "0x1391f4A2cf244b5174699DE5D42F563cfbC683Ed";
+// export const TwitterContractAddress = "0x1391f4A2cf244b5174699DE5D42F563cfbC683Ed";
+export const AccountManagerContractAddress = "0xf335AA74d82FBA06FB59A70d6794711667112faf";
 export const Web3StorageApi= "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDhjRTkxYjY4M0YzMzlkODk3RERCMkZhNkNhREZhRTI4MTk0Q0ZBMmMiLCJpc3MiOiJ3ZWIzLXN0b3JhZ2UiLCJpYXQiOjE2ODY2NTE2Mjg0MzQsIm5hbWUiOiJkaXNzZXJ0YXRpb24taXBmcyJ9.MmB0ouV4iFhTu9oSoxflqz2wlLfRQrBDlYQnFsMl85o";
 export const MessageFileName = "message"

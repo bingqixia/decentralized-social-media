@@ -3,8 +3,8 @@ import "./Settings.css";
 import { Input,Upload,Loading,useNotification } from "@web3uikit/core";
 import { ethers } from "ethers";
 import Web3Modal from 'web3modal';
-import { TwitterContractAddress,Web3StorageApi } from "../config";
-import TwitterAbi from '../abi/Twitter.json';
+import { Web3StorageApi } from "../config";
+import TwitterAbi from '../abi/UserContract.json';
 import { Web3Storage } from 'web3.storage';
 
 
@@ -12,14 +12,15 @@ const Settings = () =>{
 
     const notification = useNotification();
     const userName = JSON.parse(localStorage.getItem('userName'));
-    const userBio = JSON.parse(localStorage.getItem('userBio'));
+    const userDescription = JSON.parse(localStorage.getItem('userDescription'));
     const userImage = JSON.parse(localStorage.getItem('userImage'));
     const userBanner = JSON.parse(localStorage.getItem('userBanner'));
+    const TwitterContractAddress = JSON.parse(localStorage.getItem('userContractAddress'));
 
     const [profileFile,setProfileFile] = useState();
     const [bannerFile,setBannerFile] = useState();
     const [name,setName] = useState(userName);
-    const [bio,setBio] = useState(userBio);
+    const [description,setDescription] = useState(userDescription);
     const [loading,setLoading] = useState(false);
     let profileUploadedUrl = userImage;
     let bannerUploadedUrl = userBanner;
@@ -27,7 +28,7 @@ const Settings = () =>{
     async function storeFile (selectedFile) {
         const client = new Web3Storage({token: Web3StorageApi});
         const rootCid = await client.put(selectedFile);
-        let ipfsUploadedUrl = `https://${rootCid}.ipfs.dweb.link/${selectedFile[0].name}`;
+        let ipfsUploadedUrl = encodeURI(`https://${rootCid}.ipfs.dweb.link/${selectedFile[0].name}`);
         return ipfsUploadedUrl;
     }
 
@@ -65,11 +66,11 @@ const Settings = () =>{
         const provider = new ethers.providers.Web3Provider(connection);
         const signer = provider.getSigner();
         const contract = new ethers.Contract(TwitterContractAddress,TwitterAbi.abi,signer);
-        const transaction = await contract.updateUser(name,bio,profileUploadedUrl,bannerUploadedUrl);
+        const transaction = await contract.updateUser(name,description,profileUploadedUrl,bannerUploadedUrl);
         await transaction.wait();
 
         window.localStorage.setItem('userName',JSON.stringify(name));
-        window.localStorage.setItem('userBio',JSON.stringify(bio));
+        window.localStorage.setItem('userDescription',JSON.stringify(description));
         window.localStorage.setItem('userImage',JSON.stringify(profileUploadedUrl));
         window.localStorage.setItem('userBanner',JSON.stringify(bannerUploadedUrl));
 
@@ -85,8 +86,8 @@ const Settings = () =>{
     return (
         <>
         <div className="settingsPage">
-            <Input label="Name" name="NameChange" width="100%" labelBgColor="#141d26" onChange={(e)=>setName(e.target.value)} value={userName} />
-            <Input label="Bio" name="BioChange" width="100%" labelBgColor="#141d26" onChange={(e)=>setBio(e.target.value)} value={userBio}/>
+            <Input label="Nick Name" name="NameChange" width="100%" labelBgColor="#141d26" onChange={(e)=>setName(e.target.value)} value={userName} />
+            <Input label="Description" name="DescriptionChange" width="100%" labelBgColor="#141d26" onChange={(e)=>setDescription(e.target.value)} value={userDescription}/>
             <div className="pfp">Change Profile Image</div>
             <Upload onChange={profileHandler} />
             <div className="pfp">Change Banner Image</div>

@@ -4,8 +4,7 @@ import { Avatar, Loading, useNotification } from "@web3uikit/core";
 import { MessageCircle, Star, Eth, Bin, Calendar } from "@web3uikit/icons";
 import { ethers } from "ethers";
 import Web3Modal from "web3modal";
-import { TwitterContractAddress } from "../config";
-import Twitter from "../abi/Twitter.json";
+import UserContractAbi from "../abi/UserContract.json"
 
 const TweetInFeed = (props) => {
   const onlyUser = props.profile;
@@ -13,6 +12,7 @@ const TweetInFeed = (props) => {
   const [tweets, setTweets] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const notification = useNotification();
+  const TwitterContractAddress = JSON.parse(localStorage.getItem('userContractAddress'));
 
   useEffect(() => {
     if (onlyUser) {
@@ -29,7 +29,7 @@ const TweetInFeed = (props) => {
     const signer = provider.getSigner();
     const contract = new ethers.Contract(
       TwitterContractAddress,
-      Twitter.abi,
+      UserContractAbi.abi,
       signer
     );
     const data = await contract.getMyTweets();
@@ -57,18 +57,18 @@ const TweetInFeed = (props) => {
             return response.text();
           })
           .then((text) => {
+            console.log("ipfs: ", text);
             item.tweetText = text;
           })
           .catch(function () {
             console.log("error");
           });
-
-
         return item;
       })
     );
 
     setTweets(result.reverse());
+    console.log("loadMyTweets tweets", tweets);
     setIsLoading(false);
   }
 
@@ -79,7 +79,7 @@ const TweetInFeed = (props) => {
     const signer = provider.getSigner();
     const contract = new ethers.Contract(
       TwitterContractAddress,
-      Twitter.abi,
+      UserContractAbi.abi,
       signer
     );
     const data = await contract.getAllTweets();
@@ -116,7 +116,7 @@ const TweetInFeed = (props) => {
       })
     );
     setTweets(result.reverse());
-    console.log("tweets", tweets);
+    console.log("loadMyTweets tweets", tweets);
     setIsLoading(false);
   }
 
@@ -128,7 +128,7 @@ const TweetInFeed = (props) => {
     const signer = provider.getSigner();
     const contract = new ethers.Contract(
       TwitterContractAddress,
-      Twitter.abi,
+      UserContractAbi.abi,
       signer
     );
     const data = await contract.deleteTweet(tweetId, true);
