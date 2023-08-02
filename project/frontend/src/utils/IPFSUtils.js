@@ -30,7 +30,6 @@ const createName = async (signer) => {
 
 const publishRevision = async (signkey, value, isFirst=false) => {
     const name = await Name.from(signkey);
-    console.log("load name: ", name.toString());
     try {
       if(isFirst) {
         console.log("publish first Revision: ", value);

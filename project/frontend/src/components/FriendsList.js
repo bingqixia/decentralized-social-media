@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import "./FriendsList.css";
 import { Avatar, Loading, useNotification } from "@web3uikit/core";
 import { Input } from "@web3uikit/core";
-import { AccountManagerContractAddress } from "../config";
+import { AccountManagerContractAddress, UserContractAddressKey } from "../config";
 import AccountManagerAbi from "../abi/AccountManager.json";
 import { Bin } from "@web3uikit/icons";
 import { ethers } from "ethers";
@@ -20,7 +20,7 @@ const FriendsList = () => {
   );
 
   const TwitterContractAddress = JSON.parse(
-    localStorage.getItem("userContractAddress")
+    localStorage.getItem(UserContractAddressKey)
   );
 
   const handleReloadPage = () => {

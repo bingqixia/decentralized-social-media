@@ -26,7 +26,6 @@ const Home = () => {
         const revision = await Name.resolve(name);
         const lastCid = revision.value;
         const jsonData = await retrieveFileFromIPFS(lastCid);
-        console.log("Resolved last value:", jsonData);
 
         const tweeter = await signer.getAddress();
 
@@ -39,7 +38,6 @@ const Home = () => {
             try {
                 // upload iamge
                 imageCid = await uploadFileToIPFS(selectedFile, true);
-                console.log('imageCid: ', imageCid);
             } catch (error) {
                 console.error(`upload image to ipfs failed! Error -> ${error}`);
                 notification({
@@ -93,10 +91,10 @@ const Home = () => {
     }
 
     async function addTweet(){
-        if(tweetText.trim().length < 5){
+        if(tweetText.trim().length < 3){
             notification({
                 type: 'warning',
-                message:'Minimum 5 characters',
+                message:'Minimum 3 characters',
                 title: 'Tweet Field required',
                 position: 'topR'
             });
@@ -111,11 +109,7 @@ const Home = () => {
         const userContract = new ethers.Contract(TwitterContractAddress, TwitterAbi.abi, signer);
 
         try{
-            const tweetsPointer = await userContract.getTweetsPointer();
-            console.log("ipns address:", tweetsPointer);
-
             const signKeyString = await userContract.getSignKey();
-            console.log("signkey:", signKeyString);
             const signKey = new Uint8Array(JSON.parse(signKeyString));
             const name = await Name.from(signKey);
             await storeFile(signer, name, signKey);

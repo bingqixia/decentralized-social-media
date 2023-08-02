@@ -6,4 +6,4 @@ export const UserNameStr = "userName";
 export const UserDescriptionStr = "userDestription";
 export const UserImageStr = "userImage";
 export const UserBannerStr = "userBanner";
-export const RECORD_NUM_PER_PAGE = 10;
+export const RECORD_NUM_PER_PAGE = 3;

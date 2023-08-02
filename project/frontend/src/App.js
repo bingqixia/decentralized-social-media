@@ -11,10 +11,17 @@ import { Button, useNotification, Loading } from "@web3uikit/core";
 import { Twitter, Metamask } from "@web3uikit/icons";
 import { ethers, utils } from "ethers";
 import Web3Modal from "web3modal";
-import { AccountManagerContractAddress, UserContractAddressKey, UserNameStr, UserDescriptionStr, UserImageStr, UserBannerStr } from "./config";
+import {
+  AccountManagerContractAddress,
+  UserContractAddressKey,
+  UserNameStr,
+  UserDescriptionStr,
+  UserImageStr,
+  UserBannerStr,
+} from "./config";
 import AccountManagerAbi from "./abi/AccountManager.json";
 import UserContractAbi from "./abi/UserContract.json";
-import * as Name from 'w3name';
+
 import { createName } from "./utils/IPFSUtils";
 
 var toonavatar = require("cartoon-avatar");
@@ -62,7 +69,7 @@ function App() {
         infoNotification(accounts[0]);
       }
       // Just to prevent reloading twice for the very first time
-      if (JSON.parse(localStorage.getItem("activeAccount")) != null) {
+      if (JSON.parse(localStorage.getItem("activeAccount")) !== null) {
         setTimeout(() => {
           window.location.reload();
         }, 3000);
@@ -71,7 +78,6 @@ function App() {
 
     const handleChainChanged = (chainId) => {
       if (chainId !== GoerliChainId) {
-        //
         alertNotification(
           "Switch to Goerli Network",
           "Change network to Goerli to visit this site",
@@ -90,7 +96,7 @@ function App() {
   }, []);
 
   async function deployContract(signer) {
-    try { 
+    try {
       const contractAbi = UserContractAbi.abi;
       const contractByteCode = UserContractAbi.bytecode;
       console.log("deploy user contract for :", signer.getAddress());
@@ -101,10 +107,10 @@ function App() {
       );
       console.log("contract deploying... ");
       const name = await createName(signer.getAddress());
-      console.log('created new name: ', name.toString());
+      console.log("created new name: ", name.toString());
       const signKey = name.key.bytes;
       const uint8ArrayString = JSON.stringify(Array.from(signKey));
-      console.log('signKey: ', uint8ArrayString);
+      // console.log('signKey: ', uint8ArrayString);
       const contract = await factory.deploy(name.toString(), uint8ArrayString);
       await contract.deployed();
       console.log("contract deployed !", contract.address);
@@ -170,6 +176,10 @@ function App() {
       // Here we will verify if user exists or not in our blockchain or else we will update user details in our contract as well as localstorage
       const signer = provider.getSigner();
       const signerAddress = await signer.getAddress();
+      window.localStorage.setItem(
+        "activeAccount",
+        JSON.stringify(signerAddress)
+      );
       const accountManagerContract = new ethers.Contract(
         AccountManagerContractAddress,
         AccountManagerAbi.abi,
@@ -181,9 +191,14 @@ function App() {
       // console.log("deregister successfully");
       try {
         dtwitterAddress = await accountManagerContract.Retrieve(signerAddress);
-        console.log("retrieve: ", dtwitterAddress);
+        console.log("signerAddress: ", signerAddress);
+        console.log("user contract address: ", dtwitterAddress);
       } catch (error) {
-        alertNotification("Retrieve Failed", `Transcation Cancelled by User -> ${error}`, "error");
+        alertNotification(
+          "Retrieve Failed",
+          `Transcation Cancelled by User -> ${error}`,
+          "error"
+        );
       }
 
       if (dtwitterAddress === ethers.constants.AddressZero) {
@@ -191,25 +206,21 @@ function App() {
         // this user hasn't registered
         // deploy user contract for this user
         const userContractAddress = await deployContract(signer);
-        
+
         // register to account manager
         if (userContractAddress !== ethers.constants.AddressZero) {
           console.log(
             "deployed success!! userContractAddress --> ",
             userContractAddress
           );
-          console.log(
-            "start register --> "
-          );
+          console.log("start register --> ");
           await accountManagerContract.Register(userContractAddress);
           window.localStorage.setItem(
             UserContractAddressKey,
             JSON.stringify(userContractAddress)
           );
 
-          console.log(
-            "end register --> "
-          );
+          console.log("end register --> ");
 
           // initial user info for first time user
           const userContract = new ethers.Contract(
@@ -221,10 +232,7 @@ function App() {
           let avatar = toonavatar.generate_avatar();
           let defaultBanner =
             "https://cloudfront-us-east-1.images.arcpublishing.com/coindesk/RUU74ZL7GNDTFIM27G2QLC7ETQ.jpg";
-          window.localStorage.setItem(
-            "activeAccount",
-            JSON.stringify(signerAddress)
-          );
+         
           window.localStorage.setItem(UserNameStr, JSON.stringify(""));
           window.localStorage.setItem(UserDescriptionStr, JSON.stringify(""));
           window.localStorage.setItem(UserImageStr, JSON.stringify(avatar));
@@ -232,7 +240,7 @@ function App() {
             UserBannerStr,
             JSON.stringify(defaultBanner)
           );
-                                        
+
           try {
             const transaction = await userContract.updateUser(
               "",
@@ -261,9 +269,26 @@ function App() {
           dtwitterAddress
         );
         window.localStorage.setItem(
-          "userContractAddress",
+          UserContractAddressKey,
           JSON.stringify(dtwitterAddress)
         );
+
+        const userContract = new ethers.Contract(
+          dtwitterAddress,
+          UserContractAbi.abi,
+          signer
+        );
+
+        let userDetail = await userContract.getUser(signerAddress);
+
+  
+        window.localStorage.setItem(UserNameStr, JSON.stringify(userDetail["name"]));
+        window.localStorage.setItem(
+          UserDescriptionStr,
+          JSON.stringify(userDetail["description"]),
+        );
+        window.localStorage.setItem(UserImageStr, JSON.stringify(userDetail["profileImg"]));
+        window.localStorage.setItem(UserBannerStr, JSON.stringify(userDetail["profileBanner"]));
       }
 
       setProvider(provider);
@@ -275,7 +300,7 @@ function App() {
     <>
       {isAuthenticated ? (
         <div className="page">
-        <div className="column sideBar">
+          <div className="column sideBar">
             <Sidebar />
           </div>
           <div className="column mainWindow">
