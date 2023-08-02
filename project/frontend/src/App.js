@@ -188,7 +188,7 @@ function App() {
       );
       let dtwitterAddress = ethers.constants.AddressZero;
       // console.log("deregister start");
-      // await accountManagerContract.Deregister(signerAddress);
+      // await accountManagerContract.(signerAddress);
       // console.log("deregister successfully");
       try {
         dtwitterAddress = await accountManagerContract.Retrieve(signerAddress);

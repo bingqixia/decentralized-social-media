@@ -27,7 +27,7 @@ const Settings = () => {
       signer
     );
     console.log(`deregister ${signerAddress} start`);
-    await accountManagerContract.Deregister(signerAddress);
+    await accountManagerContract.Deregister();
     console.log("deregister successfully");
 
     notification({

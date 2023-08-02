@@ -43,10 +43,10 @@ contract AccountManager {
 
     /**
      * 
-     * @param _address deregister account for user
+     *  deregister account for user
      */
-    function Deregister(address _address) public {
-        delete users[_address];
-        emit UserDeregister(_address);
+    function Deregister() public {
+        delete users[msg.sender];
+        emit UserDeregister(msg.sender);
     }
 }
