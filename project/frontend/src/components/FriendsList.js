@@ -58,6 +58,7 @@ const FriendsList = () => {
         title: "Address Invalid",
         position: "topR",
       });
+      setIsAdding(false);
       return;
     }
     setIsAdding(true);
@@ -82,6 +83,7 @@ const FriendsList = () => {
         title: "Friend doesn't register!",
         position: "topR",
       });
+      setIsLoading(false);
       return;
     }
     try {
@@ -122,11 +124,21 @@ const FriendsList = () => {
     const data = await contract.getAllFriends();
     const result = await Promise.all(
       data.map(async (friend) => {
+
+        const friendContract = new ethers.Contract(
+          friend.contractAddress,
+          UserContractAbi.abi,
+          signer
+        );
+
+        let userDetail = await friendContract.getUser(friend.walletAddress);
         let item = {
           walletAddress: friend.walletAddress,
           contractAddress: friend.contractAddress,
           id: friend.id,
           isDeleted: friend.isDeleted,
+          userName: userDetail["name"],
+          userImage: userDetail["profileImg"],
         };
         return item;
       })
@@ -210,8 +222,8 @@ const FriendsList = () => {
                     size={60}
                   />
                   <div className="friend-info">
-                    <div className="who">{e.walletAddress}</div>
-                    {/* <div className="accWhen">{e.tweeter}</div> */}
+                    <div className="who">{e.userName}</div>
+                    <div className="accWhen">{e.walletAddress}</div>
                   </div>
                   <div className="interactionNums">
                     <Bin
