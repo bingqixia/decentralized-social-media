@@ -150,7 +150,7 @@ const FriendsList = () => {
   }
 
   async function deletefriends(friendId) {
-    setIsLoading(false);
+    setIsLoading(true);
     const web3Modal = new Web3Modal();
     const connection = await web3Modal.connect();
     const provider = new ethers.providers.Web3Provider(connection);
@@ -169,6 +169,7 @@ const FriendsList = () => {
       position: "topR",
       icon: <Bin />,
     });
+    setIsLoading(false);
     handleReloadPage();
     // loadFriendsList();
     

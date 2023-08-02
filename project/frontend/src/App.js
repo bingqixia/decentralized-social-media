@@ -70,9 +70,10 @@ function App() {
       }
       // Just to prevent reloading twice for the very first time
       if (JSON.parse(localStorage.getItem("activeAccount")) !== null) {
-        setTimeout(() => {
-          window.location.reload();
-        }, 3000);
+        // setTimeout(() => {
+        //   window.location.reload();
+        // }, 3000);
+        window.location.reload();
       }
     };
 

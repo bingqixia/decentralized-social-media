@@ -51,7 +51,7 @@ const Settings = () => {
             <div className="save">Edit Profile</div>
           </Link>
         )}
-        {loading ? (
+        {/* {loading ? (
           <div className="save">
             <Loading />
           </div>
@@ -59,7 +59,7 @@ const Settings = () => {
           <div className="save" onClick={deregister}>
             Deregister
           </div>
-        )}
+        )} */}
       </div>
     </>
   );
