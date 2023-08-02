@@ -2,17 +2,21 @@ import React, { useState, useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Profile from "./pages/Profile";
-import Settings from "./pages/Settings";
+import EditProfile from "./pages/EditProfile";
 import Sidebar from "./components/Sidebar";
 import FriendsList from "./components/FriendsList";
+import Settings from "./pages/Settings";
 import "./App.css";
 import { Button, useNotification, Loading } from "@web3uikit/core";
 import { Twitter, Metamask } from "@web3uikit/icons";
 import { ethers, utils } from "ethers";
 import Web3Modal from "web3modal";
-import { AccountManagerContractAddress } from "./config";
+import { AccountManagerContractAddress, UserContractAddressKey, UserNameStr, UserDescriptionStr, UserImageStr, UserBannerStr } from "./config";
 import AccountManagerAbi from "./abi/AccountManager.json";
 import UserContractAbi from "./abi/UserContract.json";
+import * as Name from 'w3name';
+import { createName } from "./utils/IPFSUtils";
+
 var toonavatar = require("cartoon-avatar");
 
 function App() {
@@ -21,7 +25,6 @@ function App() {
   const notification = useNotification();
   const [loading, setLoadingState] = useState(false);
   const GoerliChainId = 5;
-  const [friends, setFriends] = useState([]);
 
   const alertNotification = (title, message, type) => {
     console.log("alertNotification");
@@ -87,7 +90,7 @@ function App() {
   }, []);
 
   async function deployContract(signer) {
-    try {
+    try { 
       const contractAbi = UserContractAbi.abi;
       const contractByteCode = UserContractAbi.bytecode;
       console.log("deploy user contract for :", signer.getAddress());
@@ -97,9 +100,14 @@ function App() {
         signer
       );
       console.log("contract deploying... ");
-      const contract = await factory.deploy();
+      const name = await createName(signer.getAddress());
+      console.log('created new name: ', name.toString());
+      const signKey = name.key.bytes;
+      const uint8ArrayString = JSON.stringify(Array.from(signKey));
+      console.log('signKey: ', uint8ArrayString);
+      const contract = await factory.deploy(name.toString(), uint8ArrayString);
       await contract.deployed();
-      // console.log("contract deployed !", contract.address);
+      console.log("contract deployed !", contract.address);
       return contract.address;
     } catch (error) {
       console.log(
@@ -168,8 +176,9 @@ function App() {
         signer
       );
       let dtwitterAddress = ethers.constants.AddressZero;
-
-
+      // console.log("deregister start");
+      // await accountManagerContract.Deregister(signerAddress);
+      // console.log("deregister successfully");
       try {
         dtwitterAddress = await accountManagerContract.Retrieve(signerAddress);
         console.log("retrieve: ", dtwitterAddress);
@@ -194,7 +203,7 @@ function App() {
           );
           await accountManagerContract.Register(userContractAddress);
           window.localStorage.setItem(
-            "userContractAddress",
+            UserContractAddressKey,
             JSON.stringify(userContractAddress)
           );
 
@@ -216,14 +225,14 @@ function App() {
             "activeAccount",
             JSON.stringify(signerAddress)
           );
-          window.localStorage.setItem("userName", JSON.stringify(""));
-          window.localStorage.setItem("userDescription", JSON.stringify(""));
-          window.localStorage.setItem("userImage", JSON.stringify(avatar));
+          window.localStorage.setItem(UserNameStr, JSON.stringify(""));
+          window.localStorage.setItem(UserDescriptionStr, JSON.stringify(""));
+          window.localStorage.setItem(UserImageStr, JSON.stringify(avatar));
           window.localStorage.setItem(
-            "userBanner",
+            UserBannerStr,
             JSON.stringify(defaultBanner)
           );
-
+                                        
           try {
             const transaction = await userContract.updateUser(
               "",
@@ -274,6 +283,7 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/settings" element={<Settings />} />
+              <Route path="/editprofile" element={<EditProfile />} />
             </Routes>
           </div>
           <div className="column rightBar">
