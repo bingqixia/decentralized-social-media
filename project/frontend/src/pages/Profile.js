@@ -5,13 +5,13 @@ import TweetInFeed from '../components/TweetInFeed';
 import { ethers } from "ethers";
 import Web3Modal from 'web3modal';
 import { Eth } from "@web3uikit/icons";
-
+import { UserImageStr, UserNameStr, UserBannerStr, UserDescriptionStr } from "../config";
 const Profile = () =>{
     const activeAccount = JSON.parse(localStorage.getItem('activeAccount'));
-    const userName = JSON.parse(localStorage.getItem('userName'));
-    const userDescription = JSON.parse(localStorage.getItem('userDescription'));
-    const userImage = JSON.parse(localStorage.getItem('userImage'));
-    const userBanner = JSON.parse(localStorage.getItem('userBanner'));
+    const userName = JSON.parse(localStorage.getItem(UserNameStr));
+    const userDescription = JSON.parse(localStorage.getItem(UserDescriptionStr));
+    const userImage = JSON.parse(localStorage.getItem(UserImageStr));
+    const userBanner = JSON.parse(localStorage.getItem(UserBannerStr));
     const [accountBalance,setAccountBalance] = useState(0);
 
     async function getAccountBalance(){
@@ -34,7 +34,7 @@ const Profile = () =>{
                <img className="profilePFP" src={userImage} />
                <div className="profileName">{userName}</div>
                <div className="profileWallet">{activeAccount} - <Eth /> {accountBalance} ETH</div>
-               <Link to='/settings'>
+               <Link className="no-underline" to='/editprofile'>
                    <div className="profileEdit">Edit Profile</div>
                </Link>
                <div className="profileBio">{userDescription}</div>

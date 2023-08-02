@@ -1,11 +1,13 @@
-
-
 .settingsPage {
     padding: 80px;
     display: flex;
     flex-direction: column;
     gap: 40px;
 }
+
+.no-underline {
+    text-decoration: none;
+  }
 
 .pfp {
     color: #68738D;
