@@ -29,9 +29,9 @@ const Profile = () =>{
 
     return (
         <>
-          <img className="profileBanner" src={userBanner}/>
+          <img className="profileBanner" src={userBanner} alt=""/>
           <div className="pfpContainer">
-               <img className="profilePFP" src={userImage} />
+               <img className="profilePFP" src={userImage} alt="" />
                <div className="profileName">{userName}</div>
                <div className="profileWallet">{activeAccount} - <Eth /> {accountBalance} ETH</div>
                <Link className="no-underline" to='/editprofile'>

@@ -1,7 +1,7 @@
 import React,{useState,useRef} from "react";
 import "./Home.css"; 
 import { Avatar,Loading,useNotification } from '@web3uikit/core';
-import {Image, Twitter } from '@web3uikit/icons';
+import {Image } from '@web3uikit/icons';
 import TweetInFeed from "../components/TweetInFeed";
 import { ethers } from "ethers";// web3 sotrage
 import Web3Modal from 'web3modal';
@@ -147,7 +147,7 @@ const Home = () => {
                  <div className="tweetSection">
                      <div className="imgDiv" onClick={onImageClick}>
                          <input type="file" ref={inputFile} onChange={changeHandler} style={{display:"none"}} />
-                         { selectedImage ? <img src={selectedImage} width={150} /> : <Image fontSize={25} fill="#ffffff" /> }
+                         { selectedImage ? <img src={selectedImage} width={150} alt=""/> : <Image fontSize={25} fill="#ffffff" /> }
                          
                      </div>
                      <div className="tweet" onClick={addTweet}>{uploading ? <Loading /> : 'Tweet'}</div>

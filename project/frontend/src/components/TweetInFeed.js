@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from "react";
 import "./TweetInFeed.css";
 import { Avatar, Loading, useNotification } from "@web3uikit/core";
-import { MessageCircle, Star, Eth, Bin, Calendar } from "@web3uikit/icons";
+import { Bin, Calendar } from "@web3uikit/icons";
 import { ethers } from "ethers";
 import Web3Modal from "web3modal";
 import UserContractAbi from "../abi/UserContract.json";
 import {
   UserContractAddressKey,
-  UserNameStr,
-  UserImageStr,
   RECORD_NUM_PER_PAGE,
 } from "../config";
 import * as Name from "w3name";
@@ -94,12 +92,13 @@ const TweetInFeed = (props) => {
     );
 
     setFriends(result);
-    console.log("loadFriendsList", friends);
+    // console.log("loadFriendsList", friends);
     setIsLoading(false);
   }
 
   function timeConverter(UNIX_timestamp) {
-    var a = new Date(UNIX_timestamp * 1000);
+    var a = new Date(UNIX_timestamp);
+    const zeroPad = (num, places) => String(num).padStart(places, '0')
     var months = [
       "Jan",
       "Feb",
@@ -121,7 +120,7 @@ const TweetInFeed = (props) => {
     var min = a.getMinutes();
     var sec = a.getSeconds();
     var time =
-      date + " " + month + " " + year + " " + hour + ":" + min + ":" + sec;
+      date + " " + month + " " + year + " " + zeroPad(hour, 2) + ":" + zeroPad(min, 2) + ":" + zeroPad(sec, 2);
     return time;
   }
 
@@ -147,7 +146,7 @@ const TweetInFeed = (props) => {
 
     let allTweets = [];
     for (let i = 0; i < users.length; i++) {
-      console.log("user: ", i, users[i]);
+      // console.log("user: ", i, users[i]);
       const contract = new ethers.Contract(
         users[i].contractAddress,
         UserContractAbi.abi,
@@ -158,7 +157,7 @@ const TweetInFeed = (props) => {
       if (userTweets !== null && userTweets.length > 0) {
         const tweetsForUser = await Promise.all(
           userTweets.map(async (tweet) => {
-            const unixTime = tweet.createTime / 1000;
+            const unixTime = tweet.createTime;
             const tweetDate = timeConverter(unixTime);
             let userDetail = await contract.getUser(tweet.tweeter);
             let item = {
@@ -329,7 +328,7 @@ const TweetInFeed = (props) => {
       icon: <Bin />,
     });
     setIsLoading(false);
-    loadAllTweets();
+    loadAllTweets(onlyUser);
   }
 
   if (isLoading)
@@ -355,7 +354,7 @@ const TweetInFeed = (props) => {
             <div className="tweetContent">
               {tweet.tweetText}
               {tweet.tweetImg !== null && (
-                <img src={tweet.tweetImg} className="tweetImg" />
+                <img src={tweet.tweetImg} className="tweetImg" alt=""/>
               )}
             </div>
             <div className="interactions">
