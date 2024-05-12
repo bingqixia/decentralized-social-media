@@ -1,2 +1,2 @@
 # Decentralized-Social-Media
-The DApp based on Ethereum and IPFS for my CS Master Dissertation
+The DApp based on Ethereum and IPFS for my Master Dissertation
